@@ -8,6 +8,7 @@ function Game() {
 Game.prototype.keysDown = {};
 Game.prototype.Canvas = null;
 Game.prototype.Context = null;
+Game.prototype.Platforms = [];
 
 Game.prototype.FPS = 0;
 Game.prototype.FPSTicks = 0;
@@ -17,9 +18,9 @@ Game.prototype.TPSTicks = 0;
 Game.prototype.TPSTime = new Date().getTime();
 
 Game.prototype.TickLimiterTime = new Date().getTime();
-Game.prototype.TickLimiterWait = 20;
+Game.prototype.TickLimiterWait = 30;
 Game.prototype.RenderLimiterTime = new Date().getTime();
-Game.prototype.RenderLimiterWait = 80;
+Game.prototype.RenderLimiterWait = 60;
 
 Game.prototype.Settings = {
     ShowFPS: true,
@@ -44,6 +45,13 @@ Game.prototype.Initialise = function () {
     craigpayne.ball = new Ball();
     craigpayne.ball.Initialise();
 
+    craigpayne.game.Platforms = [
+        { x: 200, y: 100, w: 150 },
+        { x: 200, y: 200, w: 150 },
+        { x: 200, y: 300, w: 150 },
+        { x: 200, y: 400, w: 150 },
+    ];
+
     setInterval(craigpayne.game.Tick, 1);
     setInterval(craigpayne.game.Render, 1);
 };
@@ -61,11 +69,11 @@ Game.prototype.Update = function () {//modifier) {
     }
     if (90 in craigpayne.game.keysDown) { //Z
         craigpayne.ball.InvertGravity = false;
-        craigpayne.ball.Trajectory = -20;
+        craigpayne.ball.Trajectory = -100;
     }
     if (88 in craigpayne.game.keysDown) { //X 
         craigpayne.ball.InvertGravity = true;
-        craigpayne.ball.Trajectory = -20;
+        craigpayne.ball.Trajectory = -100;
     }
 };
 
@@ -77,6 +85,16 @@ Game.prototype.Render = function () {
     craigpayne.game.Context.fillStyle = "#000000";
     craigpayne.game.Context.fillRect(0, 0, 640, 480);
     craigpayne.ball.Render(craigpayne.game.Context);
+
+    //draw platforms
+    for (var i = 0; i < craigpayne.game.Platforms.length; i++) {
+        craigpayne.game.Context.strokeStyle = "yellow";
+        craigpayne.game.Context.lineWidth = 2;
+        craigpayne.game.Context.beginPath();
+        craigpayne.game.Context.moveTo(craigpayne.game.Platforms[i].x, craigpayne.game.Platforms[i].y);
+        craigpayne.game.Context.lineTo(craigpayne.game.Platforms[i].x + craigpayne.game.Platforms[i].w, craigpayne.game.Platforms[i].y);
+        craigpayne.game.Context.stroke();
+    }
 
     var settings = Game.prototype.Settings;
     if (settings.ShowFPS) {
@@ -90,10 +108,10 @@ Game.prototype.Render = function () {
 
         craigpayne.game.Context.shadowBlur = 10;
         craigpayne.game.Context.fillStyle = "#FFFFFF";
-        craigpayne.game.Context.font = "bold 30px Arial";
+        craigpayne.game.Context.font = "bold 20px Arial";
         craigpayne.game.Context.shadowColor = "#FFFFFF";
         craigpayne.game.Context.strokeStyle = "#FFFFFF";
-        craigpayne.game.Context.fillText("Bouncing Ball Example", 150, 100, 400);
+        craigpayne.game.Context.fillText("Bouncing Ball Example", 400, 440, 400);
         craigpayne.game.Context.font = "bold 10px Arial";
         craigpayne.game.Context.fillStyle = "#FFFFFF";
         craigpayne.game.Context.fillText("FPS:" + craigpayne.game.FPS, 10, 10, 600);

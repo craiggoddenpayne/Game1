@@ -12,29 +12,40 @@ PositionModifier.prototype.ApplyTrajectoryLaw = function (y, trajectory) {
     var gravity = PositionModifier.prototype.NewtonModifier;
     y += gravity;
     trajectory -= 1;
-    
-    //if trajectory is positive it will fight against gravity, so cancel gravity
-    if (trajectory > 0) {
+
+    if (trajectory > -10) {
         //cancel gravity
         y -= gravity;
     }
 
-    if (trajectory > 20)
+    if (trajectory > 10)
         y -= gravity;
-    if (trajectory > 10 && trajectory < 20)
-        y -= gravity - (gravity / 8);
-
-    if (trajectory > 5 && trajectory < 10)
-        y -= gravity - (gravity / 4);
-    if (trajectory > 0 && trajectory < 5)
-        y -= gravity - (gravity / 2);
-    if (trajectory > -5 && trajectory < 0)
-        y -= gravity - (gravity / 2);
-    if (trajectory > -10 && trajectory < -5)
-        y -= gravity - (gravity / 4);
-    if (trajectory > -20 && trajectory < 10)
-        y -= gravity - (gravity / 8);
-
+    
+    var quarterGravity = gravity / 4;
+    var halfGravity = gravity / 2;
+    switch (trajectory) {
+        case 10: y -= halfGravity + quarterGravity; break;
+        case 9: y -= halfGravity + quarterGravity; break;
+        case 8: y -= halfGravity + quarterGravity; break;
+        case 7: y -= halfGravity; break;
+        case 6: y -= halfGravity; break;
+        case 5: y -= halfGravity; break;
+        case 4: y -= quarterGravity; break;
+        case 3: y -= quarterGravity; break;
+        case 2: y -= quarterGravity; break;
+        case 1: break;
+        case 0: break;
+        case -1: break;
+        case -2: y += quarterGravity; break;
+        case -3: y += quarterGravity; break;
+        case -4: y += quarterGravity; break;
+        case -5: y += halfGravity; break;
+        case -6: y += halfGravity; break;
+        case -7: y += halfGravity; break;
+        case -8: y += halfGravity + quarterGravity; break;
+        case -9: y += halfGravity + quarterGravity; break;
+        case -10: y += halfGravity + quarterGravity; break;
+    }
     return { Trajectory: trajectory, Y: y };
 };
 
@@ -45,26 +56,38 @@ PositionModifier.prototype.ApplyTrajectoryLawInverted = function (y, trajectory)
     trajectory -= 1;
 
     //if trajectory is positive it will fight against gravity, so cancel gravity
-    if (trajectory > 0) {
+    if (trajectory > -10) {
         //cancel gravity
         y += gravity;
     }
 
-    if (trajectory > 20)
+    if (trajectory > 10)
         y += gravity;
-    if (trajectory > 10 && trajectory < 20)
-        y += gravity - (gravity / 8);
 
-    if (trajectory > 5 && trajectory < 10)
-        y += gravity - (gravity / 4);
-    if (trajectory > 0 && trajectory < 5)
-        y += gravity - (gravity / 2);
-    if (trajectory > -5 && trajectory < 0)
-        y += gravity - (gravity / 2);
-    if (trajectory > -10 && trajectory < -5)
-        y += gravity - (gravity / 4);
-    if (trajectory > -20 && trajectory < 10)
-        y += gravity - (gravity / 8);
-
+    var quarterGravity = gravity / 4;
+    var halfGravity = gravity / 2;
+    switch (trajectory) {
+       case 10: y += halfGravity + quarterGravity; break;
+        case 9: y += halfGravity + quarterGravity; break;
+        case 8: y += halfGravity + quarterGravity; break;
+        case 7: y += halfGravity; break;
+        case 6: y += halfGravity; break;
+        case 5: y += halfGravity; break;
+        case 4: y += quarterGravity; break;
+        case 3: y += quarterGravity; break;
+        case 2: y += quarterGravity; break;
+        case 1: break;
+        case 0: break;
+        case -1: break;
+        case -2: y -= quarterGravity; break;
+        case -3: y -= quarterGravity; break;
+        case -4: y -= quarterGravity; break;
+        case -5: y -= halfGravity; break;
+        case -6: y -= halfGravity; break;
+        case -7: y -= halfGravity; break;
+        case -8: y -= halfGravity + quarterGravity; break;
+        case -9: y -= halfGravity + quarterGravity; break;
+        case -10: y -= halfGravity + quarterGravity; break;
+    }
     return { Trajectory: trajectory, Y: y };
 };
