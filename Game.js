@@ -46,9 +46,9 @@ Game.prototype.Initialise = function () {
     craigpayne.ball.Initialise();
 
     craigpayne.game.Platforms = [
-        { x: 200, y: 100, w: 150 },
-        { x: 200, y: 200, w: 150 },
-        { x: 200, y: 300, w: 150 },
+        { x: 10, y: 100, w: 100 },
+        { x: 50, y: 150, w: 50 },
+        { x: 200, y: 150, w: 150 },
         { x: 200, y: 400, w: 150 },
     ];
 
@@ -81,14 +81,16 @@ Game.prototype.Render = function () {
     if ((craigpayne.game.RenderLimiterTime + craigpayne.game.RenderLimiterWait) >= new Date().getTime()) {
         return;
     }
+
+    var colours = new Colours();
     craigpayne.game.RenderLimiterTime = new Date().getTime();
-    craigpayne.game.Context.fillStyle = "#000000";
+    craigpayne.game.Context.fillStyle = colours.Black();
     craigpayne.game.Context.fillRect(0, 0, 640, 480);
     craigpayne.ball.Render(craigpayne.game.Context);
 
     //draw platforms
     for (var i = 0; i < craigpayne.game.Platforms.length; i++) {
-        craigpayne.game.Context.strokeStyle = "yellow";
+        craigpayne.game.Context.strokeStyle = colours.Yellow();
         craigpayne.game.Context.lineWidth = 2;
         craigpayne.game.Context.beginPath();
         craigpayne.game.Context.moveTo(craigpayne.game.Platforms[i].x, craigpayne.game.Platforms[i].y);
@@ -106,14 +108,15 @@ Game.prototype.Render = function () {
             craigpayne.game.FPSTicks = 0;
         }
 
+        var white = colours.White();
         craigpayne.game.Context.shadowBlur = 10;
-        craigpayne.game.Context.fillStyle = "#FFFFFF";
+        craigpayne.game.Context.fillStyle = white;
+        craigpayne.game.Context.shadowColor = white;
+        craigpayne.game.Context.strokeStyle = white;
         craigpayne.game.Context.font = "bold 20px Arial";
-        craigpayne.game.Context.shadowColor = "#FFFFFF";
-        craigpayne.game.Context.strokeStyle = "#FFFFFF";
         craigpayne.game.Context.fillText("Bouncing Ball Example", 400, 440, 400);
+
         craigpayne.game.Context.font = "bold 10px Arial";
-        craigpayne.game.Context.fillStyle = "#FFFFFF";
         craigpayne.game.Context.fillText("FPS:" + craigpayne.game.FPS, 10, 10, 600);
         craigpayne.game.Context.fillText("TPS:" + craigpayne.game.TPS, 10, 20, 600);
         craigpayne.game.Context.fillText("TimeCheck:" + craigpayne.game.FPSTime, 10, 30, 600);
@@ -123,6 +126,30 @@ Game.prototype.Render = function () {
         craigpayne.game.Context.fillText("Press 'X' to Apply Gravity", 10, 70, 600);
         craigpayne.game.Context.fillText("Press 'Z' to Apply Inverted Gravity", 10, 80, 600);
     }
+
+    //window frame
+    var cyan = colours.Cyan();    
+    craigpayne.game.Context.lineWidth = 2;
+    craigpayne.game.Context.shadowColor = cyan;
+    craigpayne.game.Context.strokeStyle = cyan;
+
+    craigpayne.game.Context.beginPath();
+    craigpayne.game.Context.moveTo(0, 0);
+    craigpayne.game.Context.lineTo(640, 0);
+    craigpayne.game.Context.stroke();
+    craigpayne.game.Context.beginPath();
+    craigpayne.game.Context.moveTo(0, 480);
+    craigpayne.game.Context.lineTo(640, 480);
+    craigpayne.game.Context.stroke();
+
+    craigpayne.game.Context.beginPath();
+    craigpayne.game.Context.moveTo(0, 0);
+    craigpayne.game.Context.lineTo(0, 480);
+    craigpayne.game.Context.stroke();
+    craigpayne.game.Context.beginPath();
+    craigpayne.game.Context.moveTo(640, 0);
+    craigpayne.game.Context.lineTo(640, 480);
+    craigpayne.game.Context.stroke();
 };
 
 Game.prototype.Tick = function () {
@@ -142,4 +169,49 @@ Game.prototype.Tick = function () {
     }
     craigpayne.game.Update();
     craigpayne.ball.Tick();
+};
+
+
+Game.prototype.InvertRGBColor = function(rgbColour) {
+    var oldCol = rgbColour.split('(')[1].split(')')[0].split(',');
+    var newCol = new Array();
+    for (var i = 0; i < oldCol.length; i++) {
+        newCol[i] = 255 - Number(oldCol[i]);
+    }
+    return 'rgb(' + newCol[0] + ',' + newCol[1] + ',' + newCol[2] + ')';
+};
+
+
+
+
+
+
+
+
+
+function Colours() {
+    Colours.prototype = this;
+}
+
+Colours.prototype = {
+    Black: function() {
+        var black = "rgb(0,0,0)";
+        return craigpayne.ball.InvertGravity ? craigpayne.game.InvertRGBColor(black) : black;
+    },
+    Yellow: function() {
+        var yellow = "rgb(255,216,0)";
+        return craigpayne.ball.InvertGravity ? craigpayne.game.InvertRGBColor(yellow) : yellow;
+    },
+    White: function() {
+        var white = "rgb(255,255,255)";
+        return craigpayne.ball.InvertGravity ? craigpayne.game.InvertRGBColor(white) : white;
+    },
+    Cyan: function() {
+        var cyan = "rgb(0,255,255)";
+        return craigpayne.ball.InvertGravity ? craigpayne.game.InvertRGBColor(cyan) : cyan;
+    },
+    Lime: function() {
+        var lime = "rgb(76,255,0)";
+        return craigpayne.ball.InvertGravity ? craigpayne.game.InvertRGBColor(lime) : lime;
+    }
 };

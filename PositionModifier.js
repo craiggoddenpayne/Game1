@@ -13,8 +13,7 @@ PositionModifier.prototype.ApplyTrajectoryLaw = function (y, trajectory) {
     y += gravity;
     trajectory -= 1;
 
-    if (trajectory > -10) {
-        //cancel gravity
+    if (trajectory > -10) {        
         y -= gravity;
     }
 
@@ -57,7 +56,6 @@ PositionModifier.prototype.ApplyTrajectoryLawInverted = function (y, trajectory)
 
     //if trajectory is positive it will fight against gravity, so cancel gravity
     if (trajectory > -10) {
-        //cancel gravity
         y += gravity;
     }
 
