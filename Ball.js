@@ -8,9 +8,9 @@ function Ball() {
 
 Ball.prototype.Width = 4;
 Ball.prototype.Height = 4;
-Ball.prototype.X = 150;
-Ball.prototype.Y = 10;
-Ball.prototype.Trajectory = -100;
+Ball.prototype.X = 100;
+Ball.prototype.Y = 200;
+Ball.prototype.Trajectory = -20;
 Ball.prototype.InvertGravity = false;
 Ball.prototype.PlatformTolerance = 5;
 Ball.prototype.DefaultTrajectory = 15;
@@ -117,7 +117,7 @@ Ball.prototype.Left = function () {
             if (craigpayne.ball.Y >= craigpayne.game.Walls[i].y) {
                 if (craigpayne.ball.Y <= craigpayne.game.Walls[i].y + craigpayne.game.Walls[i].h) {
                     if (craigpayne.ball.X >= Game.prototype.Settings.XOffset + craigpayne.game.Walls[i].x) {
-                        if (craigpayne.ball.X - craigpayne.ball.ThrustModifier <= Game.prototype.Settings.XOffset + craigpayne.game.Walls[i].x) {
+                        if (craigpayne.ball.X - craigpayne.ball.ThrustModifier <= Game.prototype.Settings.XOffset + craigpayne.game.Walls[i].x + craigpayne.ball.PlatformTolerance) {
                             craigpayne.ball.X += craigpayne.ball.ThrustModifier;
                         }
                     }
@@ -138,7 +138,7 @@ Ball.prototype.Right = function () {
             if (craigpayne.ball.Y >= craigpayne.game.Walls[i].y) {
                 if (craigpayne.ball.Y <= craigpayne.game.Walls[i].y + craigpayne.game.Walls[i].h) {
                     if (craigpayne.ball.X <= Game.prototype.Settings.XOffset + craigpayne.game.Walls[i].x) {
-                        if (craigpayne.ball.X + craigpayne.ball.ThrustModifier >= Game.prototype.Settings.XOffset + craigpayne.game.Walls[i].x) {
+                        if (craigpayne.ball.X + craigpayne.ball.ThrustModifier >= Game.prototype.Settings.XOffset + craigpayne.game.Walls[i].x - craigpayne.ball.PlatformTolerance) {
                             craigpayne.ball.X -= craigpayne.ball.ThrustModifier;
                         }
                     }

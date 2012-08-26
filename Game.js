@@ -28,16 +28,26 @@ Game.prototype.Settings = {
     ViewPort: function () {
         return { width: 640, height: 480 };
     },
-    XOffset:0,
+    XOffset: 0,
     YOffset: 0
 };
 
 Game.prototype.Initialise = function () {
     addEventListener("keydown", function (e) {
-        craigpayne.game.keysDown[e.keyCode] = true;
+        craigpayne.game.keysDown[e.keyCode] = true;                   
     }, false);
 
     addEventListener("keyup", function (e) {
+
+        if (90 === e.keyCode) { //Z
+            craigpayne.ball.InvertGravity = false;
+            craigpayne.ball.Trajectory = -20;
+        }
+        if (88 === e.keyCode) { //X 
+            craigpayne.ball.InvertGravity = true;
+            craigpayne.ball.Trajectory = -20;
+        }
+
         delete craigpayne.game.keysDown[e.keyCode];
     }, false);
 
@@ -48,19 +58,18 @@ Game.prototype.Initialise = function () {
     craigpayne.ball = new Ball();
     craigpayne.ball.Initialise();
 
+    var c = new Colours();
     craigpayne.game.Platforms = [
-        { x: 10, y: 100, w: 100 },
-        { x: 50, y: 150, w: 50  },
-        { x: 200, y: 150, w: 150 },
-        { x: 200, y: 400, w: 150 },
+        { x: 80, y: 150, w: 50, colour: c.Yellow },
+        { x: 0, y: 200, w: 80, colour:c.Yellow  },
+        { x: 0, y: 400, w: 800, colour: c.Yellow },
     ];
     craigpayne.game.Walls = [
-        { x: 10, y: 100, h: 100 },
-        { x: 50, y: 150, h: 50 },
-        { x: 200, y: 150, h: 150 },
-        { x: 200, y: 400, h: 150 },
+        { x: 80, y: 150, h: 50, colour: c.Orange },
+        { x: 130, y: 150, h: 50, colour: c.Orange },
+        { x: 5, y: 195, h: 210, colour: c.Purple },
+        { x: 10, y: 195, h: 210, colour: c.Purple },
     ];
-
 
     setInterval(craigpayne.game.Tick, 1);
     setInterval(craigpayne.game.Render, 1);
@@ -77,14 +86,6 @@ Game.prototype.Update = function () {//modifier) {
     if (39 in craigpayne.game.keysDown) { // Player holding right
         craigpayne.ball.Right();
     }
-    if (90 in craigpayne.game.keysDown) { //Z
-        craigpayne.ball.InvertGravity = false;
-        craigpayne.ball.Trajectory = -100;
-    }
-    if (88 in craigpayne.game.keysDown) { //X 
-        craigpayne.ball.InvertGravity = true;
-        craigpayne.ball.Trajectory = -100;
-    }
 };
 
 Game.prototype.Render = function () {
@@ -100,7 +101,7 @@ Game.prototype.Render = function () {
 
     //draw platforms
     for (var i = 0; i < craigpayne.game.Platforms.length; i++) {
-        craigpayne.game.Context.strokeStyle = colours.Yellow();
+        craigpayne.game.Context.strokeStyle = craigpayne.game.Platforms[i].colour();
         craigpayne.game.Context.lineWidth = 2;
         craigpayne.game.Context.beginPath();
         craigpayne.game.Context.moveTo(Game.prototype.Settings.XOffset + craigpayne.game.Platforms[i].x, craigpayne.game.Platforms[i].y);
@@ -108,12 +109,12 @@ Game.prototype.Render = function () {
         craigpayne.game.Context.stroke();
     }
     //draw walls
-    for (var i = 0; i < craigpayne.game.Platforms.length; i++) {
-        craigpayne.game.Context.strokeStyle = colours.Orange();
+    for (var i = 0; i < craigpayne.game.Walls.length; i++) {
+        craigpayne.game.Context.strokeStyle = craigpayne.game.Walls[i].colour();
         craigpayne.game.Context.lineWidth = 2;
         craigpayne.game.Context.beginPath();
-        craigpayne.game.Context.moveTo(Game.prototype.Settings.XOffset + craigpayne.game.Platforms[i].x, craigpayne.game.Platforms[i].y);
-        craigpayne.game.Context.lineTo(Game.prototype.Settings.XOffset + craigpayne.game.Platforms[i].x, craigpayne.game.Platforms[i].y + craigpayne.game.Platforms[i].w);
+        craigpayne.game.Context.moveTo(Game.prototype.Settings.XOffset + craigpayne.game.Walls[i].x, craigpayne.game.Walls[i].y);
+        craigpayne.game.Context.lineTo(Game.prototype.Settings.XOffset + craigpayne.game.Walls[i].x, craigpayne.game.Walls[i].y + craigpayne.game.Walls[i].h);
         craigpayne.game.Context.stroke();
     }
 
@@ -130,13 +131,17 @@ Game.prototype.Render = function () {
         }
 
         var white = colours.White();
-        //craigpayne.game.Context.shadowBlur = 10;
         craigpayne.game.Context.fillStyle = white;
-        //craigpayne.game.Context.shadowColor = white;
         craigpayne.game.Context.strokeStyle = white;
         craigpayne.game.Context.font = "bold 20px Arial";
-        craigpayne.game.Context.fillText("Bouncing Ball Example", 400, 440, 400);
+        craigpayne.game.Context.fillText("Welcome to Game Name Here!                                              The ball naturally bounces against all surfaces. ", Game.prototype.Settings.XOffset + 150, 100, 5000);
+        craigpayne.game.Context.fillText("Use left and right keys to control the ball.                            ", Game.prototype.Settings.XOffset + 150, 130, 5000);
+        craigpayne.game.Context.fillText("You've most likely found a bug, you shouldnt really be roaming around here...", Game.prototype.Settings.XOffset + -900, 130, 5000);
+        craigpayne.game.Context.fillText("theres nothing to see, please go back --> -->", Game.prototype.Settings.XOffset + -900, 160, 5000);
+        
+        //, Game.prototype.Settings.XOffset + 150, 100, 5000);
 
+        craigpayne.game.Context.fillStyle = colours.Debug();
         craigpayne.game.Context.font = "bold 10px Arial";
         craigpayne.game.Context.fillText("FPS:" + craigpayne.game.FPS, 10, 10, 600);
         craigpayne.game.Context.fillText("TPS:" + craigpayne.game.TPS, 10, 20, 600);
@@ -171,7 +176,7 @@ Game.prototype.Tick = function () {
 };
 
 
-Game.prototype.InvertRGBColor = function(rgbColour) {
+Game.prototype.InvertRGBColor = function (rgbColour) {
     var oldCol = rgbColour.split('(')[1].split(')')[0].split(',');
     var newCol = new Array();
     for (var i = 0; i < oldCol.length; i++) {
@@ -193,28 +198,36 @@ function Colours() {
 }
 
 Colours.prototype = {
-    Black: function() {
+    Black: function () {
         var black = "rgb(0,0,0)";
         return craigpayne.ball.InvertGravity ? craigpayne.game.InvertRGBColor(black) : black;
     },
-    Yellow: function() {
+    Yellow: function () {
         var yellow = "rgb(255,216,0)";
         return craigpayne.ball.InvertGravity ? craigpayne.game.InvertRGBColor(yellow) : yellow;
     },
-    White: function() {
+    White: function () {
         var white = "rgb(255,255,255)";
         return craigpayne.ball.InvertGravity ? craigpayne.game.InvertRGBColor(white) : white;
     },
-    Cyan: function() {
+    Cyan: function () {
         var cyan = "rgb(0,255,255)";
         return craigpayne.ball.InvertGravity ? craigpayne.game.InvertRGBColor(cyan) : cyan;
     },
-    Lime: function() {
+    Lime: function () {
         var lime = "rgb(76,255,0)";
         return craigpayne.ball.InvertGravity ? craigpayne.game.InvertRGBColor(lime) : lime;
     },
-    Orange: function() {
-        var orange= "rgb(255,106,0)";
+    Orange: function () {
+        var orange = "rgb(255,106,0)";
         return craigpayne.ball.InvertGravity ? craigpayne.game.InvertRGBColor(orange) : orange;
+    },
+    Purple: function () {
+        var purple = "rgb(178,0,255)";
+        return craigpayne.ball.InvertGravity ? craigpayne.game.InvertRGBColor(purple) : purple;
+    },
+    Debug: function () {
+        var debug = "rgb(64,64,64)";
+        return craigpayne.ball.InvertGravity ? craigpayne.game.InvertRGBColor(debug) : debug;
     }
 };
