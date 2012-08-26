@@ -12,7 +12,7 @@ Ball.prototype.X = 10;
 Ball.prototype.Y = 10;
 Ball.prototype.Trajectory = -100;
 Ball.prototype.InvertGravity = false;
-Ball.prototype.PlatformTolerance = 8;
+Ball.prototype.PlatformTolerance = 5;
 Ball.prototype.DefaultTrajectory = 15;
 
 Ball.prototype.ThrustTicks = 0;
@@ -80,7 +80,7 @@ Ball.prototype.Tick = function () {
     craigpayne.ball.Y = trajectoryLaw.Y;
     craigpayne.ball.Trajectory = trajectoryLaw.Trajectory;
 
-    //if leaves top of the screen
+    //if leaves bottom of the screen
     if (craigpayne.ball.Y <= craigpayne.ball.Height) {
         if (!craigpayne.ball.InvertGravity) {
             craigpayne.ball.Y = craigpayne.ball.Height +1;
@@ -107,13 +107,37 @@ Ball.prototype.Tick = function () {
 };
 
 Ball.prototype.Left = function () {
+    //if the ball crosses a wall boundary, thrust in opposite direction to prevent a blocking movement
     if (craigpayne.ball.X > 0) {
-       craigpayne.ball.X -= craigpayne.ball.ThrustModifier;
+        for (var i = 0; i < craigpayne.game.Walls.length; i++) {
+            if (craigpayne.ball.Y >= craigpayne.game.Walls[i].y) {
+                if (craigpayne.ball.Y <= craigpayne.game.Walls[i].y + craigpayne.game.Walls[i].h) {
+                    if (craigpayne.ball.X >= craigpayne.game.Walls[i].x) {
+                        if (craigpayne.ball.X - craigpayne.ball.ThrustModifier <= craigpayne.game.Walls[i].x) {
+                            craigpayne.ball.X += craigpayne.ball.ThrustModifier;
+                        }
+                    }
+                }
+            }
+        }
+        craigpayne.ball.X -= craigpayne.ball.ThrustModifier;
     }
 };
 Ball.prototype.Right = function () {
     var settings = Game.prototype.Settings;
+    //if the ball crosses a wall boundary, thrust in opposite direction to prevent a blocking movement
     if (craigpayne.ball.X < settings.ViewPort().width) {
+        for (var i = 0; i < craigpayne.game.Walls.length; i++) {
+            if (craigpayne.ball.Y >= craigpayne.game.Walls[i].y) {
+                if (craigpayne.ball.Y <= craigpayne.game.Walls[i].y + craigpayne.game.Walls[i].h) {
+                    if (craigpayne.ball.X <= craigpayne.game.Walls[i].x) {
+                        if (craigpayne.ball.X + craigpayne.ball.ThrustModifier >= craigpayne.game.Walls[i].x) {
+                            craigpayne.ball.X -= craigpayne.ball.ThrustModifier;
+                        }
+                    }
+                }
+            }
+        }
         craigpayne.ball.X += craigpayne.ball.ThrustModifier;
     }
 };

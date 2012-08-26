@@ -9,6 +9,7 @@ Game.prototype.keysDown = {};
 Game.prototype.Canvas = null;
 Game.prototype.Context = null;
 Game.prototype.Platforms = [];
+Game.prototype.Walls = [];
 
 Game.prototype.FPS = 0;
 Game.prototype.FPSTicks = 0;
@@ -47,10 +48,17 @@ Game.prototype.Initialise = function () {
 
     craigpayne.game.Platforms = [
         { x: 10, y: 100, w: 100 },
-        { x: 50, y: 150, w: 50 },
+        { x: 50, y: 150, w: 50  },
         { x: 200, y: 150, w: 150 },
         { x: 200, y: 400, w: 150 },
     ];
+    craigpayne.game.Walls = [
+        { x: 10, y: 100, h: 100 },
+        { x: 50, y: 150, h: 50 },
+        { x: 200, y: 150, h: 150 },
+        { x: 200, y: 400, h: 150 },
+    ];
+
 
     setInterval(craigpayne.game.Tick, 1);
     setInterval(craigpayne.game.Render, 1);
@@ -97,6 +105,17 @@ Game.prototype.Render = function () {
         craigpayne.game.Context.lineTo(craigpayne.game.Platforms[i].x + craigpayne.game.Platforms[i].w, craigpayne.game.Platforms[i].y);
         craigpayne.game.Context.stroke();
     }
+    //draw walls
+    for (var i = 0; i < craigpayne.game.Platforms.length; i++) {
+        craigpayne.game.Context.strokeStyle = colours.Orange();
+        craigpayne.game.Context.lineWidth = 2;
+        craigpayne.game.Context.beginPath();
+        craigpayne.game.Context.moveTo(craigpayne.game.Platforms[i].x, craigpayne.game.Platforms[i].y);
+        craigpayne.game.Context.lineTo(craigpayne.game.Platforms[i].x, craigpayne.game.Platforms[i].y + craigpayne.game.Platforms[i].w);
+        craigpayne.game.Context.stroke();
+    }
+
+
 
     var settings = Game.prototype.Settings;
     if (settings.ShowFPS) {
@@ -213,5 +232,9 @@ Colours.prototype = {
     Lime: function() {
         var lime = "rgb(76,255,0)";
         return craigpayne.ball.InvertGravity ? craigpayne.game.InvertRGBColor(lime) : lime;
+    },
+    Orange: function() {
+        var orange= "rgb(255,106,0)";
+        return craigpayne.ball.InvertGravity ? craigpayne.game.InvertRGBColor(orange) : orange;
     }
 };
