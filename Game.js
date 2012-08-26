@@ -19,15 +19,17 @@ Game.prototype.TPSTicks = 0;
 Game.prototype.TPSTime = new Date().getTime();
 
 Game.prototype.TickLimiterTime = new Date().getTime();
-Game.prototype.TickLimiterWait = 30;
+Game.prototype.TickLimiterWait = 25;
 Game.prototype.RenderLimiterTime = new Date().getTime();
-Game.prototype.RenderLimiterWait = 60;
+Game.prototype.RenderLimiterWait = 50;
 
 Game.prototype.Settings = {
     ShowFPS: true,
     ViewPort: function () {
         return { width: 640, height: 480 };
-    }
+    },
+    XOffset:0,
+    YOffset: 0
 };
 
 Game.prototype.Initialise = function () {
@@ -101,8 +103,8 @@ Game.prototype.Render = function () {
         craigpayne.game.Context.strokeStyle = colours.Yellow();
         craigpayne.game.Context.lineWidth = 2;
         craigpayne.game.Context.beginPath();
-        craigpayne.game.Context.moveTo(craigpayne.game.Platforms[i].x, craigpayne.game.Platforms[i].y);
-        craigpayne.game.Context.lineTo(craigpayne.game.Platforms[i].x + craigpayne.game.Platforms[i].w, craigpayne.game.Platforms[i].y);
+        craigpayne.game.Context.moveTo(Game.prototype.Settings.XOffset + craigpayne.game.Platforms[i].x, craigpayne.game.Platforms[i].y);
+        craigpayne.game.Context.lineTo(Game.prototype.Settings.XOffset + craigpayne.game.Platforms[i].x + craigpayne.game.Platforms[i].w, craigpayne.game.Platforms[i].y);
         craigpayne.game.Context.stroke();
     }
     //draw walls
@@ -110,8 +112,8 @@ Game.prototype.Render = function () {
         craigpayne.game.Context.strokeStyle = colours.Orange();
         craigpayne.game.Context.lineWidth = 2;
         craigpayne.game.Context.beginPath();
-        craigpayne.game.Context.moveTo(craigpayne.game.Platforms[i].x, craigpayne.game.Platforms[i].y);
-        craigpayne.game.Context.lineTo(craigpayne.game.Platforms[i].x, craigpayne.game.Platforms[i].y + craigpayne.game.Platforms[i].w);
+        craigpayne.game.Context.moveTo(Game.prototype.Settings.XOffset + craigpayne.game.Platforms[i].x, craigpayne.game.Platforms[i].y);
+        craigpayne.game.Context.lineTo(Game.prototype.Settings.XOffset + craigpayne.game.Platforms[i].x, craigpayne.game.Platforms[i].y + craigpayne.game.Platforms[i].w);
         craigpayne.game.Context.stroke();
     }
 
@@ -128,9 +130,9 @@ Game.prototype.Render = function () {
         }
 
         var white = colours.White();
-        craigpayne.game.Context.shadowBlur = 10;
+        //craigpayne.game.Context.shadowBlur = 10;
         craigpayne.game.Context.fillStyle = white;
-        craigpayne.game.Context.shadowColor = white;
+        //craigpayne.game.Context.shadowColor = white;
         craigpayne.game.Context.strokeStyle = white;
         craigpayne.game.Context.font = "bold 20px Arial";
         craigpayne.game.Context.fillText("Bouncing Ball Example", 400, 440, 400);
@@ -142,33 +144,11 @@ Game.prototype.Render = function () {
         craigpayne.game.Context.fillText("X:" + craigpayne.ball.X, 10, 40, 600);
         craigpayne.game.Context.fillText("Y:" + craigpayne.ball.Y, 10, 50, 600);
         craigpayne.game.Context.fillText("Trajectory:" + craigpayne.ball.Trajectory, 10, 60, 600);
-        craigpayne.game.Context.fillText("Press 'X' to Apply Gravity", 10, 70, 600);
-        craigpayne.game.Context.fillText("Press 'Z' to Apply Inverted Gravity", 10, 80, 600);
+        craigpayne.game.Context.fillText("XOffset:" + Game.prototype.Settings.XOffset, 10, 70, 600);
+        craigpayne.game.Context.fillText("YOffset:" + Game.prototype.Settings.YOffset, 10, 80, 600);
+        craigpayne.game.Context.fillText("Press 'X' to Apply Gravity", 10, 100, 600);
+        craigpayne.game.Context.fillText("Press 'Z' to Apply Inverted Gravity", 10, 110, 600);
     }
-
-    //window frame
-    var cyan = colours.Cyan();    
-    craigpayne.game.Context.lineWidth = 2;
-    craigpayne.game.Context.shadowColor = cyan;
-    craigpayne.game.Context.strokeStyle = cyan;
-
-    craigpayne.game.Context.beginPath();
-    craigpayne.game.Context.moveTo(0, 0);
-    craigpayne.game.Context.lineTo(640, 0);
-    craigpayne.game.Context.stroke();
-    craigpayne.game.Context.beginPath();
-    craigpayne.game.Context.moveTo(0, 480);
-    craigpayne.game.Context.lineTo(640, 480);
-    craigpayne.game.Context.stroke();
-
-    craigpayne.game.Context.beginPath();
-    craigpayne.game.Context.moveTo(0, 0);
-    craigpayne.game.Context.lineTo(0, 480);
-    craigpayne.game.Context.stroke();
-    craigpayne.game.Context.beginPath();
-    craigpayne.game.Context.moveTo(640, 0);
-    craigpayne.game.Context.lineTo(640, 480);
-    craigpayne.game.Context.stroke();
 };
 
 Game.prototype.Tick = function () {

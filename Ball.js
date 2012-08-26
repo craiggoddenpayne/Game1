@@ -8,7 +8,7 @@ function Ball() {
 
 Ball.prototype.Width = 4;
 Ball.prototype.Height = 4;
-Ball.prototype.X = 10;
+Ball.prototype.X = 150;
 Ball.prototype.Y = 10;
 Ball.prototype.Trajectory = -100;
 Ball.prototype.InvertGravity = false;
@@ -28,10 +28,10 @@ Ball.prototype.Render = function (context) {
 
     var lime = new Colours().Lime();
     context.lineWidth = 2;
-    context.shadowColor = lime;
+    //context.shadowColor = lime;
     context.strokeStyle = lime;
     context.beginPath();
-    
+
     var radius = ((craigpayne.ball.Width + craigpayne.ball.Height) / 2);
     context.arc(craigpayne.ball.X, craigpayne.ball.Y, radius, 0, 2 * Math.PI, false);
     context.stroke();
@@ -53,15 +53,16 @@ Ball.prototype.Tick = function () {
     //Platforms
     //if the ball is with the range of a platform, and hits it, when dropping then add trajectory
     for (var i = 0; i < craigpayne.game.Platforms.length; i++) {
-        if (craigpayne.ball.X > craigpayne.game.Platforms[i].x - craigpayne.ball.PlatformTolerance) {
-            if (craigpayne.ball.X < craigpayne.game.Platforms[i].x + craigpayne.game.Platforms[i].w + craigpayne.ball.PlatformTolerance) {
-                if (craigpayne.ball.Y > craigpayne.game.Platforms[i].y - craigpayne.ball.PlatformTolerance) {
-                    if (craigpayne.ball.Y < craigpayne.game.Platforms[i].y + craigpayne.ball.PlatformTolerance) {
+        if (craigpayne.ball.X > Game.prototype.Settings.XOffset + craigpayne.game.Platforms[i].x - craigpayne.ball.PlatformTolerance) {
+            if (craigpayne.ball.X < Game.prototype.Settings.XOffset + craigpayne.game.Platforms[i].x + craigpayne.game.Platforms[i].w + craigpayne.ball.PlatformTolerance) {
+                if (craigpayne.ball.Y >= craigpayne.game.Platforms[i].y - craigpayne.ball.PlatformTolerance) {
+                    if (craigpayne.ball.Y <= craigpayne.game.Platforms[i].y + craigpayne.ball.PlatformTolerance) {
                         if (craigpayne.ball.Trajectory < 0) {
-                            if (!craigpayne.ball.InvertGravity)
+                            if (!craigpayne.ball.InvertGravity) {
                                 craigpayne.ball.Trajectory = craigpayne.ball.DefaultTrajectory;
-                            else
+                            } else {
                                 craigpayne.ball.Trajectory = craigpayne.ball.DefaultTrajectory;
+                            }
                         }
                     }
                 }
@@ -83,24 +84,24 @@ Ball.prototype.Tick = function () {
     //if leaves bottom of the screen
     if (craigpayne.ball.Y <= craigpayne.ball.Height) {
         if (!craigpayne.ball.InvertGravity) {
-            craigpayne.ball.Y = craigpayne.ball.Height +1;
+            craigpayne.ball.Y = craigpayne.ball.Height + 1;
             craigpayne.ball.Y = positionModifier.ApplyTrajectoryLawInverted(craigpayne.ball.Y, craigpayne.ball.Trajectory).Y;
             craigpayne.ball.Trajectory = -craigpayne.ball.Height + 1;
         }
         else {
-            craigpayne.ball.Y = craigpayne.ball.Height +1;
+            craigpayne.ball.Y = craigpayne.ball.Height + 1;
             craigpayne.ball.Trajectory = craigpayne.ball.DefaultTrajectory;
         }
     }
     //if leaves top of the screen
     if (craigpayne.ball.Y >= (settings.ViewPort().height - craigpayne.ball.Height)) {
         if (!craigpayne.ball.InvertGravity) {
-            craigpayne.ball.Y = (settings.ViewPort().height - craigpayne.ball.Height-1);
+            craigpayne.ball.Y = (settings.ViewPort().height - craigpayne.ball.Height - 1);
             craigpayne.ball.Y = positionModifier.ApplyTrajectoryLaw(craigpayne.ball.Y, craigpayne.ball.Trajectory).Y;
-            craigpayne.ball.Trajectory = -craigpayne.ball.Height+1;
+            craigpayne.ball.Trajectory = -craigpayne.ball.Height + 1;
         }
         else {
-            craigpayne.ball.Y = (settings.ViewPort().height - craigpayne.ball.Height)-1;
+            craigpayne.ball.Y = (settings.ViewPort().height - craigpayne.ball.Height) - 1;
             craigpayne.ball.Trajectory = -craigpayne.ball.DefaultTrajectory;
         }
     }
@@ -108,12 +109,15 @@ Ball.prototype.Tick = function () {
 
 Ball.prototype.Left = function () {
     //if the ball crosses a wall boundary, thrust in opposite direction to prevent a blocking movement
-    if (craigpayne.ball.X > 0) {
+    if (craigpayne.ball.X <= 100) {
+        Game.prototype.Settings.XOffset += craigpayne.ball.ThrustModifier;
+    }
+    else {
         for (var i = 0; i < craigpayne.game.Walls.length; i++) {
             if (craigpayne.ball.Y >= craigpayne.game.Walls[i].y) {
                 if (craigpayne.ball.Y <= craigpayne.game.Walls[i].y + craigpayne.game.Walls[i].h) {
-                    if (craigpayne.ball.X >= craigpayne.game.Walls[i].x) {
-                        if (craigpayne.ball.X - craigpayne.ball.ThrustModifier <= craigpayne.game.Walls[i].x) {
+                    if (craigpayne.ball.X >= Game.prototype.Settings.XOffset + craigpayne.game.Walls[i].x) {
+                        if (craigpayne.ball.X - craigpayne.ball.ThrustModifier <= Game.prototype.Settings.XOffset + craigpayne.game.Walls[i].x) {
                             craigpayne.ball.X += craigpayne.ball.ThrustModifier;
                         }
                     }
@@ -124,14 +128,17 @@ Ball.prototype.Left = function () {
     }
 };
 Ball.prototype.Right = function () {
-    var settings = Game.prototype.Settings;
+    //var settings = Game.prototype.Settings;
     //if the ball crosses a wall boundary, thrust in opposite direction to prevent a blocking movement
-    if (craigpayne.ball.X < settings.ViewPort().width) {
+    if (craigpayne.ball.X >= 500) {
+        Game.prototype.Settings.XOffset -= craigpayne.ball.ThrustModifier;
+    }
+    else {
         for (var i = 0; i < craigpayne.game.Walls.length; i++) {
             if (craigpayne.ball.Y >= craigpayne.game.Walls[i].y) {
                 if (craigpayne.ball.Y <= craigpayne.game.Walls[i].y + craigpayne.game.Walls[i].h) {
-                    if (craigpayne.ball.X <= craigpayne.game.Walls[i].x) {
-                        if (craigpayne.ball.X + craigpayne.ball.ThrustModifier >= craigpayne.game.Walls[i].x) {
+                    if (craigpayne.ball.X <= Game.prototype.Settings.XOffset + craigpayne.game.Walls[i].x) {
+                        if (craigpayne.ball.X + craigpayne.ball.ThrustModifier >= Game.prototype.Settings.XOffset + craigpayne.game.Walls[i].x) {
                             craigpayne.ball.X -= craigpayne.ball.ThrustModifier;
                         }
                     }
