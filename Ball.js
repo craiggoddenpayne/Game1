@@ -8,7 +8,7 @@ function Ball() {
 
 Ball.prototype.Width = 4;
 Ball.prototype.Height = 4;
-Ball.prototype.X = 100;
+Ball.prototype.X = 200;
 Ball.prototype.Y = 200;
 Ball.prototype.Trajectory = -20;
 Ball.prototype.InvertGravity = false;
@@ -109,42 +109,38 @@ Ball.prototype.Tick = function () {
 
 Ball.prototype.Left = function () {
     //if the ball crosses a wall boundary, thrust in opposite direction to prevent a blocking movement
-    if (craigpayne.ball.X <= 100) {
-        Game.prototype.Settings.XOffset += craigpayne.ball.ThrustModifier;
-    }
-    else {
-        for (var i = 0; i < craigpayne.game.Walls.length; i++) {
-            if (craigpayne.ball.Y >= craigpayne.game.Walls[i].y) {
-                if (craigpayne.ball.Y <= craigpayne.game.Walls[i].y + craigpayne.game.Walls[i].h) {
-                    if (craigpayne.ball.X >= Game.prototype.Settings.XOffset + craigpayne.game.Walls[i].x) {
-                        if (craigpayne.ball.X - craigpayne.ball.ThrustModifier <= Game.prototype.Settings.XOffset + craigpayne.game.Walls[i].x + craigpayne.ball.PlatformTolerance) {
-                            craigpayne.ball.X += craigpayne.ball.ThrustModifier;
-                        }
+    for (var i = 0; i < craigpayne.game.Walls.length; i++) {
+        if (craigpayne.ball.Y >= craigpayne.game.Walls[i].y) {
+            if (craigpayne.ball.Y <= craigpayne.game.Walls[i].y + craigpayne.game.Walls[i].h) {
+                if (craigpayne.ball.X >= Game.prototype.Settings.XOffset + craigpayne.game.Walls[i].x) {
+                    if (craigpayne.ball.X - craigpayne.ball.ThrustModifier <= Game.prototype.Settings.XOffset + craigpayne.game.Walls[i].x + craigpayne.ball.PlatformTolerance) {
+                        craigpayne.ball.X += craigpayne.ball.ThrustModifier;
                     }
                 }
             }
         }
-        craigpayne.ball.X -= craigpayne.ball.ThrustModifier;
     }
+    if (craigpayne.ball.X <= 100) 
+        Game.prototype.Settings.XOffset += craigpayne.ball.ThrustModifier;
+    else
+        craigpayne.ball.X -= craigpayne.ball.ThrustModifier;
 };
 Ball.prototype.Right = function () {
     //var settings = Game.prototype.Settings;
     //if the ball crosses a wall boundary, thrust in opposite direction to prevent a blocking movement
-    if (craigpayne.ball.X >= 500) {
-        Game.prototype.Settings.XOffset -= craigpayne.ball.ThrustModifier;
-    }
-    else {
-        for (var i = 0; i < craigpayne.game.Walls.length; i++) {
-            if (craigpayne.ball.Y >= craigpayne.game.Walls[i].y) {
-                if (craigpayne.ball.Y <= craigpayne.game.Walls[i].y + craigpayne.game.Walls[i].h) {
-                    if (craigpayne.ball.X <= Game.prototype.Settings.XOffset + craigpayne.game.Walls[i].x) {
-                        if (craigpayne.ball.X + craigpayne.ball.ThrustModifier >= Game.prototype.Settings.XOffset + craigpayne.game.Walls[i].x - craigpayne.ball.PlatformTolerance) {
-                            craigpayne.ball.X -= craigpayne.ball.ThrustModifier;
-                        }
+    for (var i = 0; i < craigpayne.game.Walls.length; i++) {
+        if (craigpayne.ball.Y >= craigpayne.game.Walls[i].y) {
+            if (craigpayne.ball.Y <= craigpayne.game.Walls[i].y + craigpayne.game.Walls[i].h) {
+                if (craigpayne.ball.X <= Game.prototype.Settings.XOffset + craigpayne.game.Walls[i].x) {
+                    if (craigpayne.ball.X + craigpayne.ball.ThrustModifier >= Game.prototype.Settings.XOffset + craigpayne.game.Walls[i].x - craigpayne.ball.PlatformTolerance) {
+                        craigpayne.ball.X -= craigpayne.ball.ThrustModifier;
                     }
                 }
             }
         }
-        craigpayne.ball.X += craigpayne.ball.ThrustModifier;
     }
+    if (craigpayne.ball.X >= 500) 
+        Game.prototype.Settings.XOffset -= craigpayne.ball.ThrustModifier;
+    else
+        craigpayne.ball.X += craigpayne.ball.ThrustModifier;
 };

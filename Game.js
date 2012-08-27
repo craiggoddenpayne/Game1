@@ -10,7 +10,9 @@ Game.prototype.Canvas = null;
 Game.prototype.Context = null;
 Game.prototype.Platforms = [];
 Game.prototype.Walls = [];
+Game.prototype.Hazards = [];
 
+Game.prototype.PlayerLives = 13;
 Game.prototype.FPS = 0;
 Game.prototype.FPSTicks = 0;
 Game.prototype.FPSTime = new Date().getTime();
@@ -22,6 +24,7 @@ Game.prototype.TickLimiterTime = new Date().getTime();
 Game.prototype.TickLimiterWait = 25;
 Game.prototype.RenderLimiterTime = new Date().getTime();
 Game.prototype.RenderLimiterWait = 50;
+Game.prototype.InvertCooldown = 0;
 
 Game.prototype.Settings = {
     ShowFPS: true,
@@ -34,18 +37,28 @@ Game.prototype.Settings = {
 
 Game.prototype.Initialise = function () {
     addEventListener("keydown", function (e) {
-        craigpayne.game.keysDown[e.keyCode] = true;                   
+        craigpayne.game.keysDown[e.keyCode] = true;
     }, false);
 
     addEventListener("keyup", function (e) {
 
         if (90 === e.keyCode) { //Z
-            craigpayne.ball.InvertGravity = false;
-            craigpayne.ball.Trajectory = -20;
+            if (craigpayne.ball.InvertGravity === true) {
+                if (craigpayne.game.InvertCooldown === 0) {
+                    craigpayne.ball.InvertGravity = false;
+                    craigpayne.ball.Trajectory = -20;
+                    craigpayne.game.InvertCooldown = 335;
+                }
+            }
         }
         if (88 === e.keyCode) { //X 
-            craigpayne.ball.InvertGravity = true;
-            craigpayne.ball.Trajectory = -20;
+            if (craigpayne.ball.InvertGravity === false) {
+                if (craigpayne.game.InvertCooldown === 0) {
+                    craigpayne.ball.InvertGravity = true;
+                    craigpayne.ball.Trajectory = -20;
+                    craigpayne.game.InvertCooldown = 335;
+                }
+            }
         }
 
         delete craigpayne.game.keysDown[e.keyCode];
@@ -60,15 +73,20 @@ Game.prototype.Initialise = function () {
 
     var c = new Colours();
     craigpayne.game.Platforms = [
-        { x: 80, y: 150, w: 50, colour: c.Yellow },
-        { x: 0, y: 200, w: 80, colour:c.Yellow  },
-        { x: 0, y: 400, w: 800, colour: c.Yellow },
+        { x: 180, y: 150, w: 50, colour: c.Yellow },
+        { x: 100, y: 200, w: 80, colour: c.Yellow },
+        { x: 100, y: 400, w: 800, colour: c.Yellow },
     ];
+
     craigpayne.game.Walls = [
-        { x: 80, y: 150, h: 50, colour: c.Orange },
-        { x: 130, y: 150, h: 50, colour: c.Orange },
-        { x: 5, y: 195, h: 210, colour: c.Purple },
-        { x: 10, y: 195, h: 210, colour: c.Purple },
+        { x: 180, y: 150, h: 50, colour: c.Orange },
+        { x: 230, y: 150, h: 50, colour: c.Orange },
+        { x: 105, y: 195, h: 210, colour: c.Purple },
+        { x: 110, y: 195, h: 210, colour: c.Purple },
+    ];
+
+    craigpayne.game.Hazards = [
+        { x: 180, y: 150, w: 50, inverted: false },
     ];
 
     setInterval(craigpayne.game.Tick, 1);
@@ -117,9 +135,37 @@ Game.prototype.Render = function () {
         craigpayne.game.Context.lineTo(Game.prototype.Settings.XOffset + craigpayne.game.Walls[i].x, craigpayne.game.Walls[i].y + craigpayne.game.Walls[i].h);
         craigpayne.game.Context.stroke();
     }
+    //draw hazards
+    for (var i = 0; i < craigpayne.game.Hazards.length; i++) {
+        craigpayne.game.Context.strokeStyle = colours.White();
+        craigpayne.game.Context.lineWidth = 2;
+        craigpayne.game.Context.beginPath();
+        craigpayne.game.Context.moveTo(Game.prototype.Settings.XOffset + craigpayne.game.Hazards[i].x, craigpayne.game.Hazards[i].y);
 
-
-
+        for (var x = Game.prototype.Settings.XOffset + craigpayne.game.Hazards[i].x; x < Game.prototype.Settings.XOffset + craigpayne.game.Hazards[i].x + craigpayne.game.Hazards[i].w; x++) {
+            if(x % 4 == 0) {
+                craigpayne.game.Context.lineTo(x, craigpayne.game.Hazards[i].y);
+                craigpayne.game.Context.stroke();
+            }
+            if (x % 8 == 2) {
+                craigpayne.game.Context.lineTo(x, craigpayne.game.Hazards[i].y + (craigpayne.game.Hazards[i].inverted ? 10 : -10));
+                craigpayne.game.Context.stroke();
+            }
+        }
+    }
+    
+    var white = colours.White();
+    craigpayne.game.Context.font = "bold 14px Arial";
+    craigpayne.game.Context.fillStyle = colours.White();
+    craigpayne.game.Context.fillText("Lives:" + craigpayne.game.PlayerLives, 550, 460, 5000);
+    if (craigpayne.game.InvertCooldown > 0) {
+        craigpayne.game.Context.fillStyle = white;
+        craigpayne.game.Context.strokeStyle = white;
+        craigpayne.game.Context.fillText("Gravity Inversion Cool off:" +
+            Helpers.prototype.RoundNumber(craigpayne.game.InvertCooldown / craigpayne.game.TPS, 1) + "s"
+            , 10, 460, 5000);
+    }
+   
     var settings = Game.prototype.Settings;
     if (settings.ShowFPS) {
         craigpayne.game.FPSTicks += 1;
@@ -130,7 +176,6 @@ Game.prototype.Render = function () {
             craigpayne.game.FPSTicks = 0;
         }
 
-        var white = colours.White();
         craigpayne.game.Context.fillStyle = white;
         craigpayne.game.Context.strokeStyle = white;
         craigpayne.game.Context.font = "bold 20px Arial";
@@ -138,7 +183,7 @@ Game.prototype.Render = function () {
         craigpayne.game.Context.fillText("Use left and right keys to control the ball.                            ", Game.prototype.Settings.XOffset + 150, 130, 5000);
         craigpayne.game.Context.fillText("You've most likely found a bug, you shouldnt really be roaming around here...", Game.prototype.Settings.XOffset + -900, 130, 5000);
         craigpayne.game.Context.fillText("theres nothing to see, please go back --> -->", Game.prototype.Settings.XOffset + -900, 160, 5000);
-        
+
         //, Game.prototype.Settings.XOffset + 150, 100, 5000);
 
         craigpayne.game.Context.fillStyle = colours.Debug();
@@ -159,6 +204,9 @@ Game.prototype.Render = function () {
 Game.prototype.Tick = function () {
     if ((craigpayne.game.TickLimiterTime + craigpayne.game.TickLimiterWait) >= new Date().getTime()) {
         return;
+    }
+    if (craigpayne.game.InvertCooldown !== 0) {
+        craigpayne.game.InvertCooldown -= 1;
     }
     craigpayne.game.TickLimiterTime = new Date().getTime();
     var settings = Game.prototype.Settings;
