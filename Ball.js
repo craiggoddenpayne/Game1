@@ -6,8 +6,8 @@ function Ball() {
     return this;
 };
 
-Ball.prototype.Width = 4;
-Ball.prototype.Height = 4;
+Ball.prototype.Width = 5;
+Ball.prototype.Height = 5;
 Ball.prototype.X = 200;
 Ball.prototype.Y = 200;
 Ball.prototype.Trajectory = -20;
@@ -60,9 +60,26 @@ Ball.prototype.Tick = function () {
                         if (craigpayne.ball.Trajectory < 0) {
                             if (!craigpayne.ball.InvertGravity) {
                                 craigpayne.ball.Trajectory = craigpayne.ball.DefaultTrajectory;
+                                craigpayne.ball.Y = craigpayne.game.Platforms[i].y - (craigpayne.ball.Height * 2);                               
                             } else {
                                 craigpayne.ball.Trajectory = craigpayne.ball.DefaultTrajectory;
+                                craigpayne.ball.Y = craigpayne.game.Platforms[i].y + (craigpayne.ball.Height * 2);                                
                             }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    for (var i = 0; i < craigpayne.game.GravityInverters.length; i++) {
+        if (craigpayne.ball.Y >= craigpayne.game.GravityInverters[i].y) {
+            if (craigpayne.ball.Y <= craigpayne.game.GravityInverters[i].y + 15) {
+                if (craigpayne.ball.X >= Game.prototype.Settings.XOffset + craigpayne.game.GravityInverters[i].x) {
+                    if (craigpayne.ball.X <= Game.prototype.Settings.XOffset + craigpayne.game.GravityInverters[i].x + 15) {
+                        if(craigpayne.game.InvertCooldown === 0) {
+                            craigpayne.game.InvertCooldown = 100;
+                            craigpayne.ball.InvertGravity = !craigpayne.ball.InvertGravity;                            
                         }
                     }
                 }
