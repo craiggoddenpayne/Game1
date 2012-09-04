@@ -1,5 +1,6 @@
 /// <reference path="Game.js" />
 /// <reference path="PositionModifier.js" />
+/// <reference path="Helpers.js" />
 
 function Ball() {
     Ball.prototype = this;
@@ -13,7 +14,7 @@ Ball.prototype.Y = 200;
 Ball.prototype.Trajectory = -20;
 Ball.prototype.InvertGravity = false;
 Ball.prototype.PlatformTolerance = 5;
-Ball.prototype.DefaultTrajectory = 15;
+Ball.prototype.DefaultTrajectory = 12;
 
 Ball.prototype.ThrustTicks = 0;
 Ball.prototype.ThrustModifier = 5;
@@ -60,10 +61,12 @@ Ball.prototype.Tick = function () {
                         if (craigpayne.ball.Trajectory < 0) {
                             if (!craigpayne.ball.InvertGravity) {
                                 craigpayne.ball.Trajectory = craigpayne.ball.DefaultTrajectory;
-                                craigpayne.ball.Y = craigpayne.game.Platforms[i].y - (craigpayne.ball.Height * 2);                               
+                                craigpayne.ball.Y = craigpayne.game.Platforms[i].y - (craigpayne.ball.Height * 2);
+                                Helpers.prototype.PlayBounce();
                             } else {
                                 craigpayne.ball.Trajectory = craigpayne.ball.DefaultTrajectory;
-                                craigpayne.ball.Y = craigpayne.game.Platforms[i].y + (craigpayne.ball.Height * 2);                                
+                                craigpayne.ball.Y = craigpayne.game.Platforms[i].y + (craigpayne.ball.Height * 2);
+                                Helpers.prototype.PlayBounce();
                             }
                         }
                     }
@@ -77,9 +80,9 @@ Ball.prototype.Tick = function () {
             if (craigpayne.ball.Y <= craigpayne.game.GravityInverters[i].y + 15) {
                 if (craigpayne.ball.X >= Game.prototype.Settings.XOffset + craigpayne.game.GravityInverters[i].x) {
                     if (craigpayne.ball.X <= Game.prototype.Settings.XOffset + craigpayne.game.GravityInverters[i].x + 15) {
-                        if(craigpayne.game.InvertCooldown === 0) {
+                        if (craigpayne.game.InvertCooldown === 0) {
                             craigpayne.game.InvertCooldown = 100;
-                            craigpayne.ball.InvertGravity = !craigpayne.ball.InvertGravity;                            
+                            craigpayne.ball.InvertGravity = !craigpayne.ball.InvertGravity;
                         }
                     }
                 }

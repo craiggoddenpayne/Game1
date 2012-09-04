@@ -41,11 +41,11 @@ Game.prototype.Initialise = function () {
     addEventListener("keydown", function (e) {
         craigpayne.game.keysDown[e.keyCode] = true;
     }, false);
-    addEventListener("mousemove", function (e) {
+    addEventListener("mousemove", function(e) {
         craigpayne.game.DebugString =
             "X:" + (e.clientX - craigpayne.game.Settings.XOffset) +
-            "Y:" + e.clientY;
-    }, false)
+                "Y:" + e.clientY;
+    }, false);
 
     addEventListener("keyup", function (e) {
 
@@ -83,44 +83,101 @@ Game.prototype.Initialise = function () {
     craigpayne.game.Platforms = [
         { x: 180, y: 150, w: 50, colour: c.Yellow },
         { x: 100, y: 200, w: 80, colour: c.Yellow },
-        { x: 100, y: 400, w: 970, colour: c.Yellow },
-        { x: 230, y: 200, w: 700, colour: c.Pink },
+        { x: 100, y: 400, w: 300, colour: c.Yellow },
+        { x: 400, y: 400, w: 300, colour: c.Lime },
      
+        { x: 600, y: 400, w: 270, colour: c.Cyan },
+        { x: 770, y: 400, w: 230, colour: c.Orange },
+        { x: 490, y: 310, w: 20, colour: c.Lime },
+        { x: 375, y: 350, w: 20, colour: c.Pink },
+        { x: 180, y: 350, w: 100, colour: c.Pink },
+     
+        { x: 230, y: 200, w: 300, colour: c.Pink },
+        { x: 530, y: 200, w: 300, colour: c.Yellow },
+        { x: 600, y: 50, w: 330, colour: c.Yellow },
+        
+        { x: 275, y: 320, w: 10, colour: c.Purple },
+        { x: 690, y: 350, w: 20, colour: c.Orange },
+        { x: 740, y: 320, w: 20, colour: c.Cyan},
+        { x: 820, y: 350, w: 20, colour: c.Yellow },
+        { x: 430, y: 300, w: 20, colour: c.Purple },
+        { x: 600, y: 350, w: 20, colour: c.Blue},
+        { x: 630, y: 300, w: 20, colour: c.Blue },
+        { x: 600, y: 250, w: 20, colour: c.Blue },
+        { x: 630, y: 150, w: 40, colour: c.Blue },
+
+        
         { x: 930, y: 230, w: 20, colour: c.Cyan },
+        { x: 930, y: 50, w: 20, colour: c.Cyan },
+        { x: 930, y: 100, w: 20, colour: c.Cyan },
+        { x: 930, y: 150, w: 20, colour: c.Cyan },
+        { x: 1000, y: 200, w: 20, colour: c.Cyan },
+
         { x: 950, y: 260, w: 20, colour: c.Cyan },
         { x: 970, y: 290, w: 30, colour: c.Cyan },
     //1 ladder
-        {x: 1000, y: 70, w: 300, colour: c.Cyan },
-        { x: 1070, y: 120, w: 100, colour: c.Cyan },
+        {x: 1020, y: 70, w: 150, colour: c.Brown },
+        { x: 1000, y: 290, w: 20, colour: c.Brown },
+        { x: 1070, y: 120, w: 100, colour: c.Yellow },
         { x: 1070, y: 160, w: 100, colour: c.Cyan },
-        { x: 1070, y: 200, w: 100, colour: c.Cyan },
-        { x: 1070, y: 240, w: 100, colour: c.Cyan },
-        { x: 1070, y: 280, w: 100, colour: c.Cyan },
-        { x: 1000, y: 400, w: 300, colour: c.Cyan },
+        { x: 1070, y: 200, w: 100, colour: c.Pink },
+        { x: 1070, y: 240, w: 100, colour: c.Purple },
+        { x: 1070, y: 280, w: 100, colour: c.Lime },
+        { x: 1070, y: 320, w: 100, colour: c.Blue },
+        { x: 1000, y: 400, w: 250, colour: c.White },
+        { x: 1250, y: 460, w: 450, colour: c.Brown },
+   
     ];
 
     craigpayne.game.Walls = [
-        { x: 180, y: 150, h: 50, colour: c.Orange },
-        { x: 230, y: 150, h: 50, colour: c.Orange },
+        { x: 180, y: 150, h: 200, colour: c.Orange },
+        { x: 230, y: 150, h: 150, colour: c.Orange },
+    
         { x: 100, y: 200, h: 200, colour: c.Purple },
+        { x: 500, y: 310, h: 90, colour: c.White },
+        { x: 385, y: 350, h: 50, colour: c.Yellow },
+        { x: 440, y: 300, h: 50, colour: c.Purple },
+        { x: 280, y: 320, h: 30, colour: c.Lime },
+        { x: 600, y: 50, h: 250, colour: c.Brown },
+        { x: 600, y: 350, h: 50, colour: c.Brown },
+        { x: 650, y: 150, h: 250, colour: c.Cyan },
+        
+
+        { x: 700, y: 350, h: 50, colour: c.Orange },
+        { x: 750, y: 320, h: 70, colour: c.Orange },
+        { x: 830, y: 350, h: 50, colour: c.Orange },
+
+
         { x: 1000, y: 350, h: 50, colour: c.Orange },
+        { x: 1020, y: 290, h: 80, colour: c.Orange },
         { x: 930, y: 200, h: 30, colour: c.Blue },
-        { x: 950, y: 230, h: 30, colour: c.Blue },
+        { x: 930, y: 0, h: 200, colour: c.Yellow},
+        { x: 950, y: 230, h: 30, colour: c.Pink },
         { x: 970, y: 260, h: 30, colour: c.Blue },
-        { x: 1000, y: 70, h: 220, colour: c.Pink },
-        { x: 1070, y: 120, h: 280, colour: c.Blue },
+        { x: 1020, y: 70, h: 220, colour: c.Pink },
+        { x: 1069, y: 120, h: 280, colour: c.Blue },
     //1 ladder
-        {x: 1170, y: 0, h: 280, colour: c.Blue },
+        { x: 1170, y: 70, h: 250, colour: c.Pink },
+        { x: 1250, y: 0, h: 350, colour: c.Orange },
+        { x: 1250, y: 400, h: 60, colour: c.Blue },
+        { x: 1210, y: 70, h: 330, colour: c.Blue },
+        { x: 1700, y: 0, h: 350, colour: c.Brown },
         
     ];
 
     craigpayne.game.Hazards = [
         { x: 180, y: 150, w: 50, inverted: false },
+        { x: 650, y: 200, w: 100, inverted: false },
+        { x: 702, y: 400, w: 126, inverted: false },
+
     ];
 
     craigpayne.game.GravityInverters = [
-      { x: 1035, y: 325 },
-      { x: 1210, y: 130 },
+      { x: 1045, y: 325 },
+      { x: 1095, y: 325 },
+        { x: 1000, y: 260},
+      { x: 670, y: 350 },
+      { x: 610, y: 50},
     ];
 
     setInterval(craigpayne.game.Tick, 1);
@@ -152,21 +209,31 @@ Game.prototype.Render = function () {
 
     //draw platforms
     for (var i = 0; i < craigpayne.game.Platforms.length; i++) {
-        craigpayne.game.Context.strokeStyle = craigpayne.game.Platforms[i].colour();
-        craigpayne.game.Context.lineWidth = 2;
-        craigpayne.game.Context.beginPath();
-        craigpayne.game.Context.moveTo(Game.prototype.Settings.XOffset + craigpayne.game.Platforms[i].x, craigpayne.game.Platforms[i].y);
-        craigpayne.game.Context.lineTo(Game.prototype.Settings.XOffset + craigpayne.game.Platforms[i].x + craigpayne.game.Platforms[i].w, craigpayne.game.Platforms[i].y);
-        craigpayne.game.Context.stroke();
+
+        if (craigpayne.game.Platforms[i].x > -(Game.prototype.Settings.XOffset) - 1000 &&
+            craigpayne.game.Platforms[i].x + craigpayne.game.Platforms[i].w < -(Game.prototype.Settings.XOffset) + 1000) {
+
+            craigpayne.game.Context.strokeStyle = craigpayne.game.Platforms[i].colour();
+            craigpayne.game.Context.lineWidth = 2;
+            craigpayne.game.Context.beginPath();
+            craigpayne.game.Context.moveTo(Game.prototype.Settings.XOffset + craigpayne.game.Platforms[i].x, craigpayne.game.Platforms[i].y);
+            craigpayne.game.Context.lineTo(Game.prototype.Settings.XOffset + craigpayne.game.Platforms[i].x + craigpayne.game.Platforms[i].w, craigpayne.game.Platforms[i].y);
+            craigpayne.game.Context.stroke();
+        }
     }
     //draw walls
     for (var i = 0; i < craigpayne.game.Walls.length; i++) {
-        craigpayne.game.Context.strokeStyle = craigpayne.game.Walls[i].colour();
-        craigpayne.game.Context.lineWidth = 2;
-        craigpayne.game.Context.beginPath();
-        craigpayne.game.Context.moveTo(Game.prototype.Settings.XOffset + craigpayne.game.Walls[i].x, craigpayne.game.Walls[i].y);
-        craigpayne.game.Context.lineTo(Game.prototype.Settings.XOffset + craigpayne.game.Walls[i].x, craigpayne.game.Walls[i].y + craigpayne.game.Walls[i].h);
-        craigpayne.game.Context.stroke();
+
+        if (craigpayne.game.Walls[i].x > -(Game.prototype.Settings.XOffset) - 1000 &&
+            craigpayne.game.Walls[i].x < -(Game.prototype.Settings.XOffset) + 1000) {
+
+            craigpayne.game.Context.strokeStyle = craigpayne.game.Walls[i].colour();
+            craigpayne.game.Context.lineWidth = 2;
+            craigpayne.game.Context.beginPath();
+            craigpayne.game.Context.moveTo(Game.prototype.Settings.XOffset + craigpayne.game.Walls[i].x, craigpayne.game.Walls[i].y);
+            craigpayne.game.Context.lineTo(Game.prototype.Settings.XOffset + craigpayne.game.Walls[i].x, craigpayne.game.Walls[i].y + craigpayne.game.Walls[i].h);
+            craigpayne.game.Context.stroke();
+        }
     }
     //draw hazards
     for (var i = 0; i < craigpayne.game.Hazards.length; i++) {
@@ -223,8 +290,7 @@ Game.prototype.Render = function () {
     craigpayne.game.Context.fillStyle = white;
     craigpayne.game.Context.strokeStyle = white;
     craigpayne.game.Context.font = "bold 20px Arial";
-    craigpayne.game.Context.fillText("Welcome to Game Name Here!                                Bounce into G blocks to invert gravity", Game.prototype.Settings.XOffset + 150, 50, 5000);
-    craigpayne.game.Context.fillText("                                            The ball naturally bounces against all flat surfaces.           ", Game.prototype.Settings.XOffset + 150, 450, 5000);
+    craigpayne.game.Context.fillText("Bouncy Bouncy!!", Game.prototype.Settings.XOffset + 150, 50, 5000);
     craigpayne.game.Context.fillText("Use left and right keys to control the ball.                            ", Game.prototype.Settings.XOffset + 150, 80, 5000);
     craigpayne.game.Context.fillText("You've most likely found a bug, you shouldnt really be roaming around here...", Game.prototype.Settings.XOffset + -900, 80, 5000);
     craigpayne.game.Context.fillText("theres nothing to see, please go back --> -->", Game.prototype.Settings.XOffset + -900, 160, 5000);
@@ -335,6 +401,10 @@ Colours.prototype = {
     Blue: function () {
         var blue = "rgb(0,35,255)";
         return craigpayne.ball.InvertGravity ? craigpayne.game.InvertRGBColor(blue) : blue;
+    },
+    Brown: function () {
+        var brown = "rgb(127,51,0)";
+        return craigpayne.ball.InvertGravity ? craigpayne.game.InvertRGBColor(brown) : brown;
     },
     Debug: function () {
         var debug = "rgb(64,64,64)";
